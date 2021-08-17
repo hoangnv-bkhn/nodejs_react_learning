@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose');
 var authenticate = require('../authenticate');
+const cors = require('./cors');
 
 const Leaders = require('../models/leaders')
 
@@ -11,7 +12,8 @@ leaderRouter.use(express.urlencoded({
 leaderRouter.use(express.json());
 
 leaderRouter.route('/')
-.get((req, res, next) => {
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, (req, res, next) => {
     Leaders.find({})
     .then((leaders) => {
         res.statusCode = 200;
@@ -44,7 +46,8 @@ leaderRouter.route('/')
 });
 
 leaderRouter.route('/:leaderId')
-.get((req, res, next) => {
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, (req, res, next) => {
     Leaders.findById(req.params.leaderId)
     .then((leader) => {
         res.statusCode = 200;
